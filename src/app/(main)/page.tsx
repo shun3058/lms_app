@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 
 const getLectures = async () => {
   try {
@@ -9,7 +10,7 @@ const getLectures = async () => {
   }
 }
 
-type Lecture = {
+export type Lecture = {
   id: number;
   my_lecture: boolean;
   lecture_name: string;
@@ -27,7 +28,9 @@ export default async function Home() {
       <h1>マイコース</h1>
       <ul>
         {lectures.map((lecture: Lecture) => (
-          <li key={lecture.id}>{lecture.lecture_name}</li>
+          <Link key={lecture.id} href={`/my_lectures/${lecture.id}`}>
+            <li>{lecture.lecture_name}</li>
+          </Link>
         ))}
       </ul>
     </div>
