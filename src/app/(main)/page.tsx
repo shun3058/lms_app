@@ -1,19 +1,19 @@
-import axios from "axios";
-import Link from "next/link";
-import { Lecture } from "@/utils/type";
+import { Lecture } from '@/utils/type'
+import axios from 'axios'
+import Link from 'next/link'
 
 const getMyLectures = async () => {
   try {
-    const res = await axios.get(`${process.env.API_URL}/lectures/mine`);
-    return res.data.my_lectures;
+    const res = await axios.get(`${process.env.API_URL}/lectures/mine`)
+    return res.data.my_lectures
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
 }
 
 export default async function Home() {
-  const my_lectures = await getMyLectures();
-  console.log(my_lectures);
+  const my_lectures = await getMyLectures()
+  console.log(my_lectures)
 
   return (
     <div>
@@ -30,5 +30,5 @@ export default async function Home() {
         ))}
       </ul>
     </div>
-  );
+  )
 }
