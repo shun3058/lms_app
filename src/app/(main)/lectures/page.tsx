@@ -1,31 +1,30 @@
 import { Lecture } from '@/models/type'
 import Link from 'next/link'
 
-const getMyLectures = async () => {
+const getLectures = async () => {
   try {
-    const res = await fetch(`${process.env.API_URL}/lectures/mine`, {
+    const res = await fetch(`${process.env.API_URL}/lectures`, {
       cache: 'no-store',
     })
     const data = await res.json()
-    return data.my_lectures
+    return data.lectures
   } catch (error) {
     console.error(error)
     return []
   }
 }
 
-export default async function Home() {
-  const my_lectures = await getMyLectures()
-
+export default async function Lectures() {
+  const lectures = await getLectures()
   return (
     <div>
       <header className="flex justify-between">
         <Link href="/">LMS</Link>
-        <Link href="/lectures">コース一覧</Link>
+        <Link href="/">マイコース</Link>
       </header>
-      <h1>マイコース</h1>
+      <h1>コース一覧</h1>
       <ul>
-        {my_lectures?.map((lecture: Lecture) => (
+        {lectures?.map((lecture: Lecture) => (
           <Link key={lecture.id} href={`/${lecture.id}`}>
             <li>{lecture.lecture_name}</li>
           </Link>

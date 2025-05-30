@@ -4,13 +4,19 @@ import { NextResponse } from 'next/server'
 export const GET = async () => {
   try {
     await connect()
-    const lectures = await prisma.lectures.findMany()
 
-    return NextResponse.json({ lectures }, { status: 200 })
+    const my_lectures = await prisma.lectures.findMany({
+      where: {
+        my_lecture: true,
+      },
+    })
+    console.log(my_lectures)
+
+    return NextResponse.json({ my_lectures }, { status: 200 })
   } catch (error) {
     console.error(error)
     return NextResponse.json(
-      { message: 'Failed to fetch lectures' },
+      { message: 'Failed to fetch lecture' },
       { status: 500 },
     )
   } finally {
