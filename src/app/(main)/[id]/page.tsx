@@ -25,6 +25,14 @@ const addLecture = async (id: string) => {
   return res.data
 }
 
+const removeLecture = async (id: string) => {
+  const res = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/lectures/remove`,
+    { id },
+  )
+  return res.data
+}
+
 export default function MyLecture({
   params,
 }: {
@@ -41,6 +49,16 @@ export default function MyLecture({
     fetchData()
   }, [id])
 
+  const handleToggleLecture = async () => {
+    if (lecture?.my_lecture) {
+      await removeLecture(id)
+    } else {
+      await addLecture(id)
+    }
+    const updatedLecture = await getDetail(id)
+    setLecture(updatedLecture)
+  }
+
   if (!lecture) return <div>Loading...</div>
 
   return (
@@ -52,7 +70,9 @@ export default function MyLecture({
           <Link href="/lectures">コース一覧</Link>
         </div>
       </header>
-      <button onClick={() => addLecture(id)}>マイコースに追加</button>
+      <button onClick={handleToggleLecture}>
+        {lecture.my_lecture ? 'マイコースから削除' : 'マイコースに追加'}
+      </button>
       <h1>{lecture.lecture_name}</h1>
       <p>{lecture.teacher_name}</p>
       <p>{lecture.lecture_description}</p>
