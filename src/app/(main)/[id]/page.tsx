@@ -1,37 +1,9 @@
 'use client'
 
+import { addLecture, getDetail, removeLecture } from '@/actions/lecture'
+import { Header } from '@/components/layout/Header'
 import { Lecture } from '@/models/type'
-import axios from 'axios'
-import Link from 'next/link'
 import { use, useEffect, useState } from 'react'
-
-const getDetail = async (id: string): Promise<Lecture> => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/lectures/detail`,
-    {
-      params: {
-        id,
-      },
-    },
-  )
-  return res.data.lecture
-}
-
-const addLecture = async (id: string) => {
-  const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/lectures/add`,
-    { id },
-  )
-  return res.data
-}
-
-const removeLecture = async (id: string) => {
-  const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_API_URL}/lectures/remove`,
-    { id },
-  )
-  return res.data
-}
 
 export default function MyLecture({
   params,
@@ -49,6 +21,7 @@ export default function MyLecture({
     fetchData()
   }, [id])
 
+  //マイコースに登録されている場合は削除、登録されていない場合は登録
   const handleToggleLecture = async () => {
     if (lecture?.my_lecture) {
       await removeLecture(id)
@@ -59,6 +32,7 @@ export default function MyLecture({
     setLecture(updatedLecture)
   }
 
+  //APIからデータを取得している間はローディング画面を表示
   if (!lecture)
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -68,32 +42,7 @@ export default function MyLecture({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <Link
-              href="/"
-              className="text-2xl font-bold text-indigo-600 hover:text-indigo-500"
-            >
-              LMS
-            </Link>
-            <div className="flex gap-4">
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                マイコース
-              </Link>
-              <Link
-                href="/lectures"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                コース一覧
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
@@ -112,6 +61,7 @@ export default function MyLecture({
                   : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
               }`}
             >
+              {/* マイコース追加済みの場合はマイコースから削除、そうでない場合はマイコースに追加と表示 */}
               {lecture.my_lecture ? 'マイコースから削除' : 'マイコースに追加'}
             </button>
           </div>
